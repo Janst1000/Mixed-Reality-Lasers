@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class LaserSource : MonoBehaviour
 {
-    public Transform laserOrigin;    // Where the laser starts
+    public Transform laserOrigin;
     public LineRenderer lineRenderer;
     public float maxLaserDistance = 50f;
 
@@ -34,18 +34,13 @@ public class LaserSource : MonoBehaviour
         {
             // 1) Draw the laser up to the hit point
             lineRenderer.SetPosition(1, hit.point);
-            
-            // Print out the name and tag of whatever you hit
-            Debug.Log("Hit object name: " + hit.collider.gameObject.name + ", Tag: " + hit.collider.gameObject.tag);
-
 
             // 2) Check if the hit object is a "Target"
-            //    (It can have a tag "Target", or you can look for a specific script)
             if (hit.collider.CompareTag("Target"))
             {
                 Debug.Log("Laser hit the target object!");
 
-                // Optionally, call a method on the target’s script
+                // Call the OnLaserHit() method on the target object
                 LaserTarget targetScript = hit.collider.GetComponent<LaserTarget>();
                 if (targetScript != null)
                 {
