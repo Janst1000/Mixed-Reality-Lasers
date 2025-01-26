@@ -9,6 +9,7 @@ public class LaserTarget : MonoBehaviour
 
     // This will track if we are currently being hit by the laser
     private bool isBeingHit;
+    private bool lastFrameWasHit;
 
     void Start()
     {
@@ -35,8 +36,9 @@ public class LaserTarget : MonoBehaviour
         isBeingHit = true;
     }
 
-    void Update()
-    {
+    
+
+    void Update(){
         // If we were being hit last frame, but not anymore, revert
         if (isBeingHit)
         {
@@ -46,15 +48,23 @@ public class LaserTarget : MonoBehaviour
             // so that if next frame the laser is NOT hitting this object,
             // we can revert color in the next line of code.
             isBeingHit = false;
+            lastFrameWasHit = true;
         }
         else
         {
             // This runs if we are NOT being hit this frame but possibly 
             // changed color in a previous frame. So revert to original color.
+            lastFrameWasHit = false;
             if (objectRenderer && originalMaterial && objectRenderer.material != originalMaterial)
             {
                 objectRenderer.material = originalMaterial;
             }
         }
+    }
+        
+    public bool IsBeingHit()
+    {
+        Debug.Log("LaserTarget: IsBeingHit() called: " + isBeingHit);
+        return lastFrameWasHit;
     }
 }

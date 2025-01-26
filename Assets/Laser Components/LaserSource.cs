@@ -2,56 +2,59 @@ using UnityEngine;
 
 public class LaserSource : MonoBehaviour
 {
-    public Transform laserOrigin;
+    public Transform laserOrigin;     // Usually the same as this transform, or a child
     public LineRenderer lineRenderer;
-    public float maxLaserDistance = 50f;
+    public float maxDistance = 50f;
 
     void Start()
     {
-        if (!laserOrigin) Debug.LogError("LaserOrigin is not assigned!");
-        if (!lineRenderer) Debug.LogError("LineRenderer is not assigned!");
+        if (!laserOrigin) Debug.LogError("LaserOrigin not assigned!");
+        if (!lineRenderer) Debug.LogError("LineRenderer not assigned!");
 
-        // For clarity, let's make sure we're using world space:
-        if (lineRenderer)
-        {
-            lineRenderer.useWorldSpace = true;
-            lineRenderer.positionCount = 2;
-            lineRenderer.startWidth = 0.01f;
-            lineRenderer.endWidth = 0.01f;
-        }
+        lineRenderer.useWorldSpace = true;
+        lineRenderer.positionCount = 2;
+        lineRenderer.startWidth = 0.01f;
+        lineRenderer.endWidth = 0.01f;
     }
 
     void Update()
     {
         if (!laserOrigin || !lineRenderer) return;
 
-        // Set the start of the laser in world space:
+        // First point of the laser
         lineRenderer.SetPosition(0, laserOrigin.position);
 
-        // Perform a Raycast in world space:
         RaycastHit hit;
-        if (Physics.Raycast(laserOrigin.position, laserOrigin.forward, out hit, maxLaserDistance))
+        if (Physics.Raycast(laserOrigin.position, laserOrigin.forward, out hit, maxDistance))
         {
-            // 1) Draw the laser up to the hit point
+            // End the beam at the hit point
             lineRenderer.SetPosition(1, hit.point);
 
-            // 2) Check if the hit object is a "Target"
+            // Check if it's a Redirection Cube
+            if (hit.collider.CompareTag("Redirector"))
+            {
+                LaserRedirector redirector = hit.collider.GetComponent<LaserRedirector>();
+                if (redirector != null)
+                {
+                    redirector.OnLaserHit();
+                }
+            }
+
+            // Check if it's a Target
             if (hit.collider.CompareTag("Target"))
             {
-                Debug.Log("Laser hit the target object!");
-
-                // Call the OnLaserHit() method on the target object
+                // Optionally, call OnLaserHit() on the target script
                 LaserTarget targetScript = hit.collider.GetComponent<LaserTarget>();
                 if (targetScript != null)
                 {
-                    targetScript.OnLaserHit(); 
+                    targetScript.OnLaserHit();
                 }
             }
         }
         else
         {
-            // If nothing is hit, draw the laser to max distance
-            lineRenderer.SetPosition(1, laserOrigin.position + laserOrigin.forward * maxLaserDistance);
+            // If nothing is hit, laser goes full distance
+            lineRenderer.SetPosition(1, laserOrigin.position + laserOrigin.forward * maxDistance);
         }
     }
 }
