@@ -25,11 +25,11 @@ public class LaserTargetTracker : MonoBehaviour
                     Debug.Log("Second Script: Target " + i + " is being hit: " + targetScript.IsBeingHit());
                     if (targetScript.IsBeingHit())
                     {
-                        targetStatusTexts[i].text = "Hit: Yes";
+                        targetStatusTexts[i].text = "Target hit: Yes\n";
                     }
                     else
                     {
-                        targetStatusTexts[i].text = "Hit: No";
+                        targetStatusTexts[i].text = "Target hit: No\n";
                     }
                 }
             }
