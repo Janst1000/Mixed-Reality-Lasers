@@ -25,9 +25,8 @@ public class RedirectedLaser : MonoBehaviour
     {
         if (!redirector || !outputPoint || !lineRenderer) return;
 
-        if (redirector.isPowered)
+        if (redirector.isPowered || redirector.lastFrameWasPowered)
         {
-            Debug.Log("Redirected Laser is powered!");
             // Enable the beam
             lineRenderer.enabled = true;
             lineRenderer.SetPosition(0, outputPoint.position);

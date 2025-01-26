@@ -23,16 +23,13 @@ public class LaserTarget : MonoBehaviour
     // Called when the laser hits this object
     public void OnLaserHit()
     {
-        // 1) Log a message
         Debug.Log(gameObject.name + " is hit by the laser!");
 
-        // 2) Change color / material while it’s being hit
         if (objectRenderer && hitMaterial)
         {
             objectRenderer.material = hitMaterial;
         }
 
-        // 3) Possibly set a flag that it’s currently being hit
         isBeingHit = true;
     }
 
@@ -42,11 +39,7 @@ public class LaserTarget : MonoBehaviour
         // If we were being hit last frame, but not anymore, revert
         if (isBeingHit)
         {
-            // Raycast from LaserSource might only call OnLaserHit() once 
-            // per frame if it continuously hits. 
-            // We want to reset isBeingHit to false after each frame,
-            // so that if next frame the laser is NOT hitting this object,
-            // we can revert color in the next line of code.
+            // Resetting for the next frame (needed so that we can detect changes)
             isBeingHit = false;
             lastFrameWasHit = true;
         }
@@ -64,7 +57,6 @@ public class LaserTarget : MonoBehaviour
         
     public bool IsBeingHit()
     {
-        Debug.Log("LaserTarget: IsBeingHit() called: " + isBeingHit);
         return lastFrameWasHit;
     }
 }

@@ -22,7 +22,6 @@ public class LaserTargetTracker : MonoBehaviour
                 LaserTarget targetScript = laserTargets[i].GetComponent<LaserTarget>();
                 if (targetScript != null)
                 {
-                    Debug.Log("Second Script: Target " + i + " is being hit: " + targetScript.IsBeingHit());
                     if (targetScript.IsBeingHit())
                     {
                         targetStatusTexts[i].text = "Target hit: Yes\n";
